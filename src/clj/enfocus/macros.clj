@@ -2,14 +2,14 @@
   (:refer-clojure :exclude [filter delay])
   (:require [clojure.java.io :as io]
             [enfocus.enlive.syntax :as syn])
-  (:import [org.jsoup.Jsoup]))
+  (:import [org.jsoup Jsoup]))
 
 
-(defmacro create-dom-action [sym nod args & forms]  
+(defmacro create-dom-action [sym nod args & forms]
   (let [id-sym (gensym "id-sym")
         pnode-sym (gensym "pnod")
-        new-form `(enfocus.core/i-at ~id-sym ~pnode-sym ~@forms)]   
-  `(defn ~sym ~args 
+        new-form `(enfocus.core/i-at ~id-sym ~pnode-sym ~@forms)]
+  `(defn ~sym ~args
      (let [[~id-sym ~pnode-sym] (~nod)
            ~pnode-sym (enfocus.core/create-hidden-dom ~pnode-sym)]
        ~new-form
@@ -53,11 +53,11 @@
   ([path dom-key sel]
      (let [text (slurp (io/reader (find-url path)))
            id-mask (get-key dom-key)
-           text (if sel 
+           text (if sel
                    (-> (org.jsoup.Jsoup/parse text)
                        (.select (syn/convert sel))
                        (.outerHtml))
-                   text)] 
+                   text)]
        `(when (nil? (@enfocus.core/tpl-cache ~dom-key))
           (let [[sym# txt#] (enfocus.core/replace-ids ~id-mask ~text)]
             (swap! enfocus.core/tpl-cache assoc ~dom-key [sym# txt#]))))))
@@ -96,7 +96,7 @@
         ~sym
         ~(case mode
            :remote  `(fn [] (enfocus.core/get-cached-snippet ~dom-key ~sel))
-           :compiled `(fn [] (enfocus.core/get-cached-dom ~dom-key))) 
+           :compiled `(fn [] (enfocus.core/get-cached-dom ~dom-key)))
         ~args ~@forms))))
 
 
@@ -104,7 +104,7 @@
   `(defn ~sym ~args (enfocus.core/at js/document ~@forms)))
 
 
-(defmacro transform 
+(defmacro transform
   ([nod trans] `(enfocus.core/at ~nod ~trans))
   ([nod sel trans] `(enfocus.core/at ~nod ~sel ~trans)))
 
@@ -113,21 +113,19 @@
 	`(enfocus.core/setTimeout (fn check# []
 	                   (if (zero? (deref enfocus.core/tpl-load-cnt))
                       (do ~@forms)
-                      (enfocus.core/setTimeout #(check#) 10))) 0))   
-  
+                      (enfocus.core/setTimeout #(check#) 10))) 0))
+
 
 (defmacro clone-for [[sym lst] & forms]
   `(fn [pnod#]
-     (let [div# (enfocus.core/create-hidden-dom 
+     (let [div# (enfocus.core/create-hidden-dom
                  (. js/document (~(symbol "createDocumentFragment"))))]
        (doseq [~sym ~lst]
-         (do 
+         (do
            (enfocus.core/at div#  (enfocus.core/append (. pnod# (~(symbol "cloneNode") true))))
            (enfocus.core/at (enfocus.core/last-element-child div#) ~@forms)))
        (enfocus.core/log-debug div#)
-       (enfocus.core/at 
-        pnod# 
+       (enfocus.core/at
+        pnod#
         (enfocus.core/do-> (enfocus.core/after (enfocus.core/remove-node-return-child div#))
                            (enfocus.core/remove-node))))))
-
-
