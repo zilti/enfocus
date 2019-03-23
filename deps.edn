@@ -1,0 +1,5 @@
+{:deps {org.clojure/clojure {:mvn/version "1.6.0"}
+        org.clojure/clojurescript {:mvn/version "0.0-2234"}
+        fresnel {:mvn/version "0.2.2"}
+        domina {:mvn/version "1.0.3"}
+        org.jsoup/jsoup {:mvn/version "1.7.2"}}}
