@@ -2,4 +2,5 @@
         org.clojure/clojurescript {:mvn/version "1.10.520"}
         fresnel {:mvn/version "0.2.2"}
         domina {:mvn/version "1.0.3"}
-        org.jsoup/jsoup {:mvn/version "1.7.2"}}}
+        org.jsoup/jsoup {:mvn/version "1.7.2"}}
+ :paths ["src/clj" "src/cljs"]}
