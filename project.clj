@@ -10,11 +10,11 @@
 
   :source-paths ["src/clj" "src/cljs"]
   
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2234"]
-                 [fresnel "0.2.2"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [org.clojure/clojurescript "1.10.597"]
+                 [fresnel "0.3.1"]
                  [domina "1.0.3"]
-                 [org.jsoup/jsoup "1.7.2"]]
+                 [org.jsoup/jsoup "1.12.1"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]]
 
@@ -26,7 +26,7 @@
 
    :builds {:deploy
             {:source-paths ["src/cljs"]
-             ;:jar true ; no needed anymore 
+                                        ;:jar true ; no needed anymore 
              :compiler
              {:output-to "dev-resources/public/js/deploy.js"
               :optimizations :whitespace
